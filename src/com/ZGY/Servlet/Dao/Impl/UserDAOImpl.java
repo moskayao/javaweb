@@ -93,7 +93,7 @@ public class UserDAOImpl implements IUserDAO {
 		// TODO Auto-generated method stub
 		 Connection conn = null;
 	        PreparedStatement prep =null;
-	        String sql ="insert into t_user values(null,?,md5(?),?,?,now())";
+	        String sql ="update t_user set username=?,password=?,phone=?,addr=? where id=?";
 	        try{
 	            conn = DBUtil.getConnection();
 	            prep = DBUtil.getPreparedStatement(conn,sql);
@@ -101,6 +101,7 @@ public class UserDAOImpl implements IUserDAO {
 	            prep.setString(2,user.getPassword());
 	            prep.setString(3,user.getPhone());
 	            prep.setString(4,user.getAddr());
+	            prep.setInt(5,user.getId());
 	            //返回值 影响了多少数据
 	            prep.executeUpdate();
 	        }catch(Exception e){
@@ -115,19 +116,20 @@ public class UserDAOImpl implements IUserDAO {
 	public User findById(Integer id) {
 		// TODO Auto-generated method stub
 		Connection conn = null;
-        PreparedStatement prep = null;
+        Statement stmt= null;
         ResultSet rs = null;
         String sql = "select * from t_user where id = "+id;
         User user = null;
         
         conn = DBUtil.getConnection();
-        
+        stmt = DBUtil.getStatement(conn);
         
        
         try{
             //prep.setInt(1,id);
-            prep = DBUtil.getPreparedStatement(conn,sql);
-       	 	rs=prep.getResultSet();
+           
+        	rs  = DBUtil.getResultSet(stmt,sql);
+       	 	System.out.println(rs);
             if(rs.next()){
                 user = new User();
                 user.setId(rs.getInt("id"));
